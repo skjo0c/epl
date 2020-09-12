@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import Modal from './Modal';
 import './App.css';
 
 export default function App() {
+  const [isModalOpen, setModalIsOpen] = useState(false);
   const [tableData, setTableData] = useState([
     {
       name: 'Burnley FC',
@@ -93,6 +95,21 @@ export default function App() {
 
   return (
     <div>
+      {isModalOpen && (
+        <Modal
+          onRequestClose={() => {
+            setModalIsOpen(!isModalOpen);
+          }}
+        />
+      )}
+      <button
+        onClick={() => {
+          setModalIsOpen(!isModalOpen);
+        }}
+        type="button"
+      >
+        Show the modal
+      </button>
       <table className="table-data">
         <tbody>
           <tr>{renderTableHeader()}</tr>
