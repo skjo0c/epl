@@ -22,6 +22,7 @@
   z-index: 1;
 }
 .modal__container {
+  position: relative;
   background: #fff;
   border-radius: 5px;
   max-width: 100%;
@@ -37,13 +38,16 @@
 button {
   background: #8c54ff;
   border: 0;
-  border-radius: 5px;
+  border-radius: 35px;
   color: #fff;
   cursor: pointer;
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 30px;
   padding: 10px 15px;
+  position: absolute;
+  top: -15px;
+  right: -15px;
   transition: transform 100ms ease-out;
 }
 button:hover {

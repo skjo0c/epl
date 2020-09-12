@@ -4,6 +4,7 @@ import './App.css';
 
 export default function App() {
   const [isModalOpen, setModalIsOpen] = useState(false);
+  const [rowData, setRowData] = useState({});
   const [tableData, setTableData] = useState([
     {
       name: 'Burnley FC',
@@ -55,6 +56,12 @@ export default function App() {
     },
   ]);
 
+  const handleTeamClick = (name) => {
+    const teamData = tableData.find((data) => data.name === name);
+    setModalIsOpen(!isModalOpen);
+    setRowData(teamData);
+  };
+
   const renderTableHeader = () => {
     let header = Object.keys(tableData[0]);
     return header.map((key, index) => {
@@ -63,7 +70,7 @@ export default function App() {
   };
 
   const renderTableData = () => {
-    return tableData.map((data, index) => {
+    return tableData.map((data) => {
       const {
         name,
         matchPlayed,
@@ -78,7 +85,9 @@ export default function App() {
       } = data; //destructuring
       return (
         <tr key={name}>
-          <td>{name}</td>
+          <td className="pointer" onClick={() => handleTeamClick(name)}>
+            {name}
+          </td>
           <td>{matchPlayed}</td>
           <td>{win}</td>
           <td>{draw}</td>
@@ -97,19 +106,13 @@ export default function App() {
     <div>
       {isModalOpen && (
         <Modal
+          data={rowData}
           onRequestClose={() => {
             setModalIsOpen(!isModalOpen);
           }}
         />
       )}
-      <button
-        onClick={() => {
-          setModalIsOpen(!isModalOpen);
-        }}
-        type="button"
-      >
-        Show the modal
-      </button>
+
       <table className="table-data">
         <tbody>
           <tr>{renderTableHeader()}</tr>
