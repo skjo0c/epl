@@ -8,6 +8,7 @@ import { getEplData } from './dashboard-actions';
 import Modal from './Modal';
 import './App.css';
 import { makeSelectEplData } from './dashboard-selector';
+import { formattedTable } from './utils/formatEplTable';
 
 const App = ({ fetchEplData, eplData }) => {
   const [listYear, setListYear] = useState([
@@ -24,58 +25,32 @@ const App = ({ fetchEplData, eplData }) => {
   const [searchData, setSearchData] = useState();
   const [tableData, setTableData] = useState([
     {
-      name: 'Burnley FC',
-      matchPlayed: 2,
-      win: 1,
-      draw: 0,
-      loss: 1,
-      goalForwarded: 4,
-      goalAgainst: 2,
-      goalDifference: 2,
-      points: 3,
-      results: ['W', 'L'],
-    },
-    {
-      name: 'Newcastle United FC',
-      matchPlayed: 2,
+      name: '',
+      matchPlayed: 0,
       win: 0,
       draw: 0,
-      loss: 2,
-      goalForwarded: 1,
-      goalAgainst: 4,
-      goalDifference: -3,
-      points: 0,
-      results: ['L', 'L'],
-    },
-    {
-      name: 'Chelsea FC',
-      matchPlayed: 2,
-      win: 0,
-      draw: 1,
-      loss: 1,
-      goalForwarded: 1,
-      goalAgainst: 5,
-      goalDifference: -4,
-      points: 1,
-      results: ['L', 'D'],
-    },
-    {
-      name: 'Wolverhampton Wanderers FC',
-      matchPlayed: 2,
-      win: 0,
-      draw: 2,
       loss: 0,
-      goalForwarded: 1,
-      goalAgainst: 1,
+      goalForwarded: 0,
+      goalAgainst: 0,
       goalDifference: 0,
-      points: 2,
-      results: ['D', 'D'],
+      points: 0,
+      results: [],
     },
   ]);
 
   useEffect(() => {
     fetchEplData(year);
   }, [year]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const val = await formattedTable(eplData);
+
+      setTableData(val);
+      setSearchData();
+    }
+    eplData.length && fetchData();
+  }, [eplData, eplData.length]);
 
   useEffect(() => {
     const data = [...tableData];
@@ -120,7 +95,7 @@ const App = ({ fetchEplData, eplData }) => {
         goalAgainst,
         goalDifference,
         points,
-        results,
+        gameResults,
       } = data; //destructuring
       return (
         <tr key={name}>
@@ -135,13 +110,11 @@ const App = ({ fetchEplData, eplData }) => {
           <td>{goalAgainst}</td>
           <td>{goalDifference}</td>
           <td>{points}</td>
-          <td>{results.join(' - ')}</td>
+          <td>{gameResults && gameResults.slice(0, 4).join(' - ')}</td>
         </tr>
       );
     });
   };
-
-  console.log(eplData, 'eplData');
 
   return (
     <div>
@@ -154,10 +127,12 @@ const App = ({ fetchEplData, eplData }) => {
         />
       )}
 
-      <label for="years">Choose Year:</label>
+      <label>Choose Year:</label>
       <select name="years" id="years" onChange={handleYearChange}>
         {listYear.map((yr) => (
-          <option value={yr}>{yr}</option>
+          <option key={yr} value={yr}>
+            {yr}
+          </option>
         ))}
       </select>
 
