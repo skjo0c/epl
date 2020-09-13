@@ -10,6 +10,13 @@ import './App.css';
 import { makeSelectEplData } from './dashboard-selector';
 
 const App = ({ fetchEplData, eplData }) => {
+  const [listYear, setListYear] = useState([
+    '2019-20',
+    '2018-19',
+    '2017-18',
+    '2016-17',
+    '2015-16',
+  ]);
   const [year, setYear] = useState('2019-20');
   const [isModalOpen, setModalIsOpen] = useState(false);
   const [rowData, setRowData] = useState({});
@@ -68,7 +75,7 @@ const App = ({ fetchEplData, eplData }) => {
 
   useEffect(() => {
     fetchEplData(year);
-  }, []);
+  }, [year]);
 
   useEffect(() => {
     const data = [...tableData];
@@ -95,6 +102,10 @@ const App = ({ fetchEplData, eplData }) => {
 
   const handleSearchChange = ({ target }) => {
     setSearchTerm(target.value);
+  };
+
+  const handleYearChange = ({ target }) => {
+    setYear(target.value);
   };
 
   const renderTableData = () => {
@@ -142,6 +153,13 @@ const App = ({ fetchEplData, eplData }) => {
           }}
         />
       )}
+
+      <label for="years">Choose Year:</label>
+      <select name="years" id="years" onChange={handleYearChange}>
+        {listYear.map((yr) => (
+          <option value={yr}>{yr}</option>
+        ))}
+      </select>
 
       <input id="search-field" type="text" onChange={handleSearchChange} />
 
