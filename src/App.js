@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import { compose } from 'redux';
+
+import { getEplData } from './dashboard-actions';
+
 import Modal from './Modal';
 import './App.css';
+import { makeSelectEplData } from './dashboard-selector';
 
-export default function App() {
+const App = ({ fetchEplData, eplData }) => {
+  const [year, setYear] = useState('2019-20');
   const [isModalOpen, setModalIsOpen] = useState(false);
   const [rowData, setRowData] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
@@ -57,6 +65,10 @@ export default function App() {
       results: ['D', 'D'],
     },
   ]);
+
+  useEffect(() => {
+    fetchEplData(year);
+  }, []);
 
   useEffect(() => {
     const data = [...tableData];
@@ -118,6 +130,8 @@ export default function App() {
     });
   };
 
+  console.log(eplData, 'eplData');
+
   return (
     <div>
       {isModalOpen && (
@@ -139,4 +153,19 @@ export default function App() {
       </table>
     </div>
   );
+};
+
+const mapStateToProps = createStructuredSelector({
+  eplData: makeSelectEplData(),
+});
+
+function mapDispatchToProps(dispatch) {
+  return {
+    dispatch,
+    fetchEplData: (year) => dispatch(getEplData(year)),
+  };
 }
+
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
+
+export default compose(withConnect)(App);

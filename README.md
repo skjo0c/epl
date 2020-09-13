@@ -1,4 +1,4 @@
-This is an assingment program that lists the EPL table with the data from [onefootball repo](https://github.com/openfootball/football.json). The repo is created from base and only consists follwoing libraries: react, webpack, babel.
+This is an assingment program that lists the EPL table with the data from [onefootball repo](https://github.com/openfootball/football.json). The repo is created from base and only consists follwoing libraries: react, redux, saga, reselect, webpack and babel.
 
 ## Setup
 
