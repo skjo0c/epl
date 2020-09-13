@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from './Modal';
 import './App.css';
 
 export default function App() {
   const [isModalOpen, setModalIsOpen] = useState(false);
   const [rowData, setRowData] = useState({});
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchData, setSearchData] = useState();
   const [tableData, setTableData] = useState([
     {
       name: 'Burnley FC',
@@ -56,6 +58,16 @@ export default function App() {
     },
   ]);
 
+  useEffect(() => {
+    const data = [...tableData];
+
+    const filtered = data.filter(({ name }) =>
+      new RegExp(searchTerm.toLowerCase()).test(name.toLowerCase())
+    );
+
+    setSearchData(filtered);
+  }, [searchTerm]);
+
   const handleTeamClick = (name) => {
     const teamData = tableData.find((data) => data.name === name);
     setModalIsOpen(!isModalOpen);
@@ -69,8 +81,12 @@ export default function App() {
     });
   };
 
+  const handleSearchChange = ({ target }) => {
+    setSearchTerm(target.value);
+  };
+
   const renderTableData = () => {
-    return tableData.map((data) => {
+    return (searchData || tableData).map((data) => {
       const {
         name,
         matchPlayed,
@@ -112,6 +128,8 @@ export default function App() {
           }}
         />
       )}
+
+      <input id="search-field" type="text" onChange={handleSearchChange} />
 
       <table className="table-data">
         <tbody>
