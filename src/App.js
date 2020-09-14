@@ -15,7 +15,7 @@ import { formattedTable } from './utils/formatEplTable';
 import { ascending, descending } from './utils/sortArray';
 
 const App = ({ fetchEplData, eplDataLoading, eplData }) => {
-  const [listYear, setListYear] = useState([
+  const [listYear] = useState([
     '2019-20',
     '2018-19',
     '2017-18',
@@ -114,8 +114,27 @@ const App = ({ fetchEplData, eplDataLoading, eplData }) => {
     setYear(target.value);
   };
 
+  const highLightRow = (index) => {
+    if (sortBy === 'descending' && index < 4) return 'top-4';
+    if (sortBy === 'descending' && index > 3 && index < 6) return 'top-6';
+    if (
+      sortBy === 'descending' &&
+      index > tableData.length - 4 &&
+      index < tableData.length
+    )
+      return 'bottom-3';
+    if (sortBy === 'ascending' && index < 3) return 'bottom-3';
+    if (sortBy === 'ascending' && index > 3 && index < 6) return 'top-6';
+    if (
+      sortBy === 'ascending' &&
+      index > tableData.length - 5 &&
+      index < tableData.length
+    )
+      return 'top-4';
+  };
+
   const renderTableData = () => {
-    return (searchData || tableData).map((data) => {
+    return (searchData || tableData).map((data, index) => {
       const {
         name,
         matchPlayed,
@@ -129,7 +148,7 @@ const App = ({ fetchEplData, eplDataLoading, eplData }) => {
         gameResults,
       } = data; //destructuring
       return (
-        <tr key={name}>
+        <tr key={name} className={highLightRow(index)}>
           <td className="pointer" onClick={() => handleTeamClick(name)}>
             <span style={{ float: 'left' }}>
               <img src={`../assets/${name}.png`} height="20" width="20" />
@@ -173,7 +192,7 @@ const App = ({ fetchEplData, eplDataLoading, eplData }) => {
           </select>
         </div>
 
-        <div class="search">
+        <div className="search">
           <span className="fa fa-search"></span>
           <input id="search-field" type="text" onChange={handleSearchChange} />
         </div>

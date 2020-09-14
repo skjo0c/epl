@@ -80,6 +80,15 @@
   color: white;
 }
 
+.table-data .top-4 {
+  background-color: #4caf50 !important;
+}
+.table-data .top-6 {
+}
+.table-data .bottom-3 {
+  background-color: rgb(234, 67, 53) !important;
+}
+
 .loader {
   position: absolute;
   left: 50%;
