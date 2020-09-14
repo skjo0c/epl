@@ -143,7 +143,11 @@ export const formattedTable = (results) => {
     return tableArray;
   }, []);
 
-  const sortedTable = descending(tableFormat, 'points', 'goalDifference');
+  let sortedTable = descending(tableFormat, 'points', 'goalDifference');
+  sortedTable = sortedTable.map((data, index) => ({
+    ...data,
+    rank: index + 1,
+  }));
 
   return sortedTable;
 };

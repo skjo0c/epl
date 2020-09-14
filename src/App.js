@@ -69,9 +69,8 @@ const App = ({ fetchEplData, eplDataLoading, eplData }) => {
 
   const handleTeamClick = (name) => {
     const teamData = tableData.find((data) => data.name === name);
-    const findIndex = tableData.findIndex((data) => data.name === name);
     setModalIsOpen(!isModalOpen);
-    setRowData({ ...teamData, rank: findIndex + 1 });
+    setRowData(teamData);
   };
 
   const handleSortByPoint = () => {
@@ -115,28 +114,15 @@ const App = ({ fetchEplData, eplDataLoading, eplData }) => {
     setYear(target.value);
   };
 
-  const highLightRow = (index) => {
-    if (sortBy === 'descending' && index < 4) return 'top-4';
-    if (sortBy === 'descending' && index > 3 && index < 6) return 'top-6';
-    if (
-      sortBy === 'descending' &&
-      index > tableData.length - 4 &&
-      index < tableData.length
-    )
-      return 'bottom-3';
-    if (sortBy === 'ascending' && index < 3) return 'bottom-3';
-    if (sortBy === 'ascending' && index > 3 && index < 6) return 'top-6';
-    if (
-      sortBy === 'ascending' &&
-      index > tableData.length - 5 &&
-      index < tableData.length
-    )
-      return 'top-4';
+  const highLightRow = (rank) => {
+    if (rank < 5) return 'top-4';
+    if (rank > 17) return 'bottom-3';
   };
 
   const renderTableData = () => {
-    return (searchData || tableData).map((data, index) => {
+    return (searchData || tableData).map((data) => {
       const {
+        rank,
         name,
         matchPlayed,
         win,
@@ -149,9 +135,10 @@ const App = ({ fetchEplData, eplDataLoading, eplData }) => {
         gameResults,
       } = data; //destructuring
       return (
-        <tr key={name} className={searchTerm === '' ? highLightRow(index) : ''}>
+        <tr key={name} className={highLightRow(rank)}>
           <td className="pointer" onClick={() => handleTeamClick(name)}>
-            <span style={{ float: 'left' }}>
+            <span className="club-ranks">{rank}</span>
+            <span className="club-logos">
               <img src={`../assets/${name}.png`} height="20" width="20" />
             </span>
             {name}
