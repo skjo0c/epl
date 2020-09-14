@@ -174,7 +174,6 @@ const App = ({ fetchEplData, eplDataLoading, eplData }) => {
     <div>
       {isModalOpen && (
         <Modal
-          data={rowData}
           onRequestClose={() => {
             setModalIsOpen(!isModalOpen);
           }}

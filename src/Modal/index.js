@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import './index.css';
 
-export default function Modal({ data, onRequestClose, children }) {
+export default function Modal({ onRequestClose, children }) {
   // Use useEffect to add an event listener to the document
   useEffect(() => {
     function onKeyDown(event) {
