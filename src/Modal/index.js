@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import './index.css';
 
-export default function Modal({ data, onRequestClose }) {
+export default function Modal({ data, onRequestClose, children }) {
   // Use useEffect to add an event listener to the document
   useEffect(() => {
     function onKeyDown(event) {
@@ -28,19 +28,7 @@ export default function Modal({ data, onRequestClose }) {
         <button type="button" onClick={onRequestClose}>
           X
         </button>
-
-        <div style={{ display: 'float' }}>
-          <div>
-            <p className="modal__title">Team Name: </p>
-            <p className="modal__title">Team Position: </p>
-          </div>
-
-          <div>
-            <p className="modal__title">Total Wins: </p>
-            <p className="modal__title">Total Draws: </p>
-            <p className="modal__title">Total Loss: </p>
-          </div>
-        </div>
+        {children}
       </div>
     </div>
   );

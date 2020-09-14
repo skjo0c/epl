@@ -92,10 +92,18 @@
 .loader {
   position: absolute;
   left: 50%;
+  top: 30%;
   -webkit-transform: translateX(-50%);
   transform: translateX(-50%);
 }
 
 .pointer {
   cursor: pointer;
+}
+
+.game-detail {
+  padding: 35px;
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
 }

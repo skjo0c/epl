@@ -69,8 +69,9 @@ const App = ({ fetchEplData, eplDataLoading, eplData }) => {
 
   const handleTeamClick = (name) => {
     const teamData = tableData.find((data) => data.name === name);
+    const findIndex = tableData.findIndex((data) => data.name === name);
     setModalIsOpen(!isModalOpen);
-    setRowData(teamData);
+    setRowData({ ...teamData, rank: findIndex + 1 });
   };
 
   const handleSortByPoint = () => {
@@ -148,7 +149,7 @@ const App = ({ fetchEplData, eplDataLoading, eplData }) => {
         gameResults,
       } = data; //destructuring
       return (
-        <tr key={name} className={highLightRow(index)}>
+        <tr key={name} className={searchTerm === '' ? highLightRow(index) : ''}>
           <td className="pointer" onClick={() => handleTeamClick(name)}>
             <span style={{ float: 'left' }}>
               <img src={`../assets/${name}.png`} height="20" width="20" />
@@ -177,7 +178,44 @@ const App = ({ fetchEplData, eplDataLoading, eplData }) => {
           onRequestClose={() => {
             setModalIsOpen(!isModalOpen);
           }}
-        />
+        >
+          <div>
+            <div style={{ display: 'flex' }}>
+              <div style={{ width: '50%' }}>
+                <img
+                  src={`../assets/${rowData.name}.png`}
+                  height="160"
+                  width="160"
+                />
+              </div>
+
+              <div>
+                <p className="modal__title">Team Name: {rowData.name} </p>
+                <p className="modal__title">Team Position: {rowData.rank}</p>
+                <p className="modal__title">
+                  Last 5 results:{' '}
+                  {rowData.gameResults &&
+                    rowData.gameResults.slice(0, 4).join(' - ')}
+                </p>
+              </div>
+            </div>
+
+            <div className="game-detail">
+              <div>
+                <div className="modal__title">Total Wins: </div>
+                <div>{rowData.win}</div>
+              </div>
+              <div>
+                <div className="modal__title">Total Draws: </div>
+                <div>{rowData.draw}</div>
+              </div>
+              <div>
+                <div className="modal__title">Total Loss: </div>
+                <div>{rowData.loss}</div>
+              </div>
+            </div>
+          </div>
+        </Modal>
       )}
 
       <div>
@@ -198,16 +236,17 @@ const App = ({ fetchEplData, eplDataLoading, eplData }) => {
         </div>
       </div>
 
-      <table className="table-data">
-        <tbody>
-          <tr>{renderTableHeader()}</tr>
-          {eplDataLoading ? (
-            <div className="loader">'Loading...'</div>
-          ) : (
-            renderTableData()
-          )}
-        </tbody>
-      </table>
+      {eplDataLoading ? (
+        <div className="loader">'Loading...'</div>
+      ) : (
+        <table className="table-data">
+          <tbody>
+            <tr>{renderTableHeader()}</tr>
+
+            {renderTableData()}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 };
