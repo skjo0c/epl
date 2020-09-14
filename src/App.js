@@ -7,10 +7,14 @@ import { getEplData } from './dashboard-actions';
 
 import Modal from './Modal';
 import './App.css';
-import { makeSelectEplData } from './dashboard-selector';
+import {
+  makeSelectEplData,
+  makeSelectEplDataLoading,
+} from './dashboard-selector';
 import { formattedTable } from './utils/formatEplTable';
+import { ascending, descending } from './utils/sortArray';
 
-const App = ({ fetchEplData, eplData }) => {
+const App = ({ fetchEplData, eplDataLoading, eplData }) => {
   const [listYear, setListYear] = useState([
     '2019-20',
     '2018-19',
@@ -21,6 +25,7 @@ const App = ({ fetchEplData, eplData }) => {
   const [year, setYear] = useState('2019-20');
   const [isModalOpen, setModalIsOpen] = useState(false);
   const [rowData, setRowData] = useState({});
+  const [sortBy, setSortBy] = useState('descending');
   const [searchTerm, setSearchTerm] = useState('');
   const [searchData, setSearchData] = useState();
   const [tableData, setTableData] = useState([
@@ -43,12 +48,12 @@ const App = ({ fetchEplData, eplData }) => {
   }, [year]);
 
   useEffect(() => {
-    async function fetchData() {
+    const fetchData = async () => {
       const val = await formattedTable(eplData);
 
       setTableData(val);
       setSearchData();
-    }
+    };
     eplData.length && fetchData();
   }, [eplData, eplData.length]);
 
@@ -68,11 +73,37 @@ const App = ({ fetchEplData, eplData }) => {
     setRowData(teamData);
   };
 
+  const handleSortByPoint = () => {
+    let sortedTable;
+    if (sortBy === 'descending') {
+      sortedTable = ascending(tableData, 'points', 'goalDifference');
+      setSortBy('ascending');
+    } else {
+      sortedTable = descending(tableData, 'points', 'goalDifference');
+      setSortBy('descending');
+    }
+    setTableData(sortedTable);
+    setSearchData(sortedTable);
+  };
+
   const renderTableHeader = () => {
-    let header = Object.keys(tableData[0]);
-    return header.map((key, index) => {
-      return <th key={index}>{key.toUpperCase()}</th>;
-    });
+    return (
+      <>
+        <th>Name</th>
+        <th>MP</th>
+        <th>W</th>
+        <th>D</th>
+        <th>L</th>
+        <th>GF</th>
+        <th>GA</th>
+        <th>GD</th>
+        <th onClick={handleSortByPoint} className="pointer">
+          Points
+          <i className="fa fa-sort" style={{ float: 'right' }}></i>
+        </th>
+        <th>Last 5</th>
+      </>
+    );
   };
 
   const handleSearchChange = ({ target }) => {
@@ -127,21 +158,32 @@ const App = ({ fetchEplData, eplData }) => {
         />
       )}
 
-      <label>Choose Year:</label>
-      <select name="years" id="years" onChange={handleYearChange}>
-        {listYear.map((yr) => (
-          <option key={yr} value={yr}>
-            {yr}
-          </option>
-        ))}
-      </select>
+      <div>
+        <div className="select-field">
+          <label>Choose Year:</label>
+          <select name="years" id="years" onChange={handleYearChange}>
+            {listYear.map((yr) => (
+              <option key={yr} value={yr}>
+                {yr}
+              </option>
+            ))}
+          </select>
+        </div>
 
-      <input id="search-field" type="text" onChange={handleSearchChange} />
+        <div class="search">
+          <span className="fa fa-search"></span>
+          <input id="search-field" type="text" onChange={handleSearchChange} />
+        </div>
+      </div>
 
       <table className="table-data">
         <tbody>
           <tr>{renderTableHeader()}</tr>
-          {renderTableData()}
+          {eplDataLoading ? (
+            <div className="loader">'Loading...'</div>
+          ) : (
+            renderTableData()
+          )}
         </tbody>
       </table>
     </div>
@@ -150,6 +192,7 @@ const App = ({ fetchEplData, eplData }) => {
 
 const mapStateToProps = createStructuredSelector({
   eplData: makeSelectEplData(),
+  eplDataLoading: makeSelectEplDataLoading(),
 });
 
 function mapDispatchToProps(dispatch) {

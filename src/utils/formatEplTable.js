@@ -1,3 +1,5 @@
+import { descending } from './sortArray';
+
 const defaultValues = {
   name: '',
   matchPlayed: 0,
@@ -132,6 +134,7 @@ export const formattedTable = (results) => {
     return tableArray;
   }, []);
 
-  console.log(tableFormat, 'tableFormat');
-  return tableFormat;
+  const sortedTable = descending(tableFormat, 'points', 'goalDifference');
+
+  return sortedTable;
 };
