@@ -18,15 +18,24 @@ export const formattedTable = (results) => {
     for (let match of currentVal.matches) {
       const { team1, team2, score } = match;
 
+      const team1Name = team1.replace(' FC', '');
+      const team2Name = team2.replace(' FC', '');
+
       // If the length doesn't already exist as a key in the object, create it
-      let prevTeam1Detail = tableArray.find((team) => team.name === team1);
-      let prevTeam2Detail = tableArray.find((team) => team.name === team2);
+      let prevTeam1Detail = tableArray.find((team) => team.name === team1Name);
+      let prevTeam2Detail = tableArray.find((team) => team.name === team2Name);
 
-      if (!prevTeam1Detail) prevTeam1Detail = { ...defaultValues, name: team1 };
-      if (!prevTeam2Detail) prevTeam2Detail = { ...defaultValues, name: team2 };
+      if (!prevTeam1Detail)
+        prevTeam1Detail = { ...defaultValues, name: team1Name };
+      if (!prevTeam2Detail)
+        prevTeam2Detail = { ...defaultValues, name: team2Name };
 
-      const team1Index = tableArray.findIndex((team) => team.name === team1);
-      const team2Index = tableArray.findIndex((team) => team.name === team2);
+      const team1Index = tableArray.findIndex(
+        (team) => team.name === team1Name
+      );
+      const team2Index = tableArray.findIndex(
+        (team) => team.name === team2Name
+      );
 
       if (typeof score === 'undefined') {
         if (team1Index === -1) {
@@ -69,7 +78,7 @@ export const formattedTable = (results) => {
 
       const updatedTeam1Value = {
         ...prevTeam1Detail,
-        name: team1,
+        name: team1Name,
         matchPlayed: prevTeam1Detail.matchPlayed + 1,
         win:
           scoreOfTeam1 > scoreOfTeam2
@@ -95,7 +104,7 @@ export const formattedTable = (results) => {
 
       const updatedTeam2Value = {
         ...prevTeam2Detail,
-        name: team2,
+        name: team2Name,
         matchPlayed: prevTeam2Detail.matchPlayed + 1,
         win:
           scoreOfTeam2 > scoreOfTeam1

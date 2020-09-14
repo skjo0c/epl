@@ -131,6 +131,9 @@ const App = ({ fetchEplData, eplDataLoading, eplData }) => {
       return (
         <tr key={name}>
           <td className="pointer" onClick={() => handleTeamClick(name)}>
+            <span style={{ float: 'left' }}>
+              <img src={`../assets/${name}.png`} height="20" width="20" />
+            </span>
             {name}
           </td>
           <td>{matchPlayed}</td>
